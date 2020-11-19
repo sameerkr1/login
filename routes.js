@@ -11,6 +11,8 @@ const flash = require('connect-flash');
 const request=require('request');
 const cheerio=require('cheerio');
 const rp = require('request-promise');
+const validUrl = require('valid-url');
+const urlExists=require('url-exists');
 
 
 routes.use(bodyparser.urlencoded({ extended: true }));
@@ -80,7 +82,6 @@ passport.use(new localStrategy({ usernameField: 'username' }, (username, passwor
 }));
 
 routes.get('/',(req,res)=>{
-    console.log('d');
     res.render('index',{'element':''}); 
 })
 
@@ -125,17 +126,21 @@ routes.get('/login', (req, res) => {
 });
 
 routes.post('/login', (req, res, next) => {
-    console.log('rahul');
+    var{username,password}=req.body;
+    if(!username||!password){
+        res.render('index',{'err1':'Please Fill All The Fields...'});
+        next();
+    }
     passport.authenticate('local', {
         failureRedirect: '/login',
         successRedirect: '/success',
         failureFlash: true,
     })(req, res, next);
-    //console.log(message);
+    
 }); 
 
 routes.get('/success', checkAuthenticated, (req, res) => {
-    res.render('success', { 'user': req.user });
+    res.render('success', { 'user': req.user,'err':'' });
 });
 
 routes.get('/logout', (req, res) => {
@@ -150,6 +155,19 @@ routes.get('/addmsg',(req,res)=>{
 
 
 routes.post('/addmsg', checkAuthenticated, (req, res) => {
+    var{urls}=req.body;
+    if(!urls){
+        res.render('success',{'user':'','err':"Url can't be blank"})
+    }
+    const $ = require('cheerio');
+    const url = req.body['urls'];
+
+    urlExists(url, function(err, exists) {
+        if(!exists){
+            res.render('success',{'user':'','err':"Enter a valid Url"});
+        }
+    });
+
     user.findOneAndUpdate(
         { username: req.user.username },
         {
@@ -161,9 +179,6 @@ routes.post('/addmsg', checkAuthenticated, (req, res) => {
             if (suc) console.log("Added Successfully...");
         }
     );
-    const $ = require('cheerio');
-    const url = req.body['urls'];
-    console.log(url);
 
     rp(url)
     .then(function(html){

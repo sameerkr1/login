@@ -9,9 +9,11 @@
     <title>Success</title>
 </head>
 
-<body>
-    <div class="container text-center">
+<body class="p-3 mb-2 text-white bg-dark">
+    
+    <div class="container text-center ">
         <h3 class="p-4">Welcome <%= user.username %> </h3>
+        <h1><%= err %></h1>
         <a class="btn btn-danger" href="/logout">Logout</a>
         <div class="container p-3">
             <form action="/addmsg" method="POST">
