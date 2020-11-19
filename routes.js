@@ -12,7 +12,10 @@ const request=require('request');
 const cheerio=require('cheerio');
 const rp = require('request-promise');
 const validUrl = require('valid-url');
-const urlExists=require('url-exists');
+const urlExist=require('url-exist');
+const http = require('http');
+const Promise=require('promise');
+const got = require('got');
 
 
 routes.use(bodyparser.urlencoded({ extended: true }));
@@ -157,16 +160,18 @@ routes.get('/addmsg',(req,res)=>{
 routes.post('/addmsg', checkAuthenticated, (req, res) => {
     var{urls}=req.body;
     if(!urls){
-        res.render('success',{'user':'','err':"Url can't be blank"})
+        res.render('success',{'user':req.user,'err':"Url can't be blank"})
     }
     const $ = require('cheerio');
     const url = req.body['urls'];
 
-    urlExists(url, function(err, exists) {
-        if(!exists){
-            res.render('success',{'user':'','err':"Enter a valid Url"});
+    (async () => {
+        try {
+            const response = await got(url);
+        } catch (error) {
+        res.render('success',{'user':req.user,'err':"Invalid Url"});
         }
-    });
+    })();
 
     user.findOneAndUpdate(
         { username: req.user.username },
