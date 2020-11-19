@@ -16,6 +16,8 @@ app.get('/logout', routes);
 app.post('/addmsg', routes);
 app.get('/addmsg',routes);
 
+console.log('this')
+
 
 console.log('server started');
 const PORT=process.env.PORT || 8000;
