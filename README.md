@@ -4,6 +4,8 @@ full authorization and authetication of users using passport
 and contents of web are being scrapped and stored in cloud
 using MongoDb
 
+URL-  https://login--page.herokuapp.com/
+
 DEPENDENCIES
 
 1.bcryptjs
@@ -29,7 +31,3 @@ DEPENDENCIES
 11.passport
 
 12.passport-local
-
-Live Project-
-
-URL-  https://login--page.herokuapp.com/
