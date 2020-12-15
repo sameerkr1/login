@@ -1,5 +1,9 @@
 LOGIN SYSTEM AND WEB SCRAPING
 
+full authorization and authetication of users using passport
+and contents of web are being scrapped and stored in cloud
+using MongoDb
+
 DEPENDENCIES
 
 1.bcryptjs
